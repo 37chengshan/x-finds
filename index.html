@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>x-finds · 刷到好的，就存下来</title>
+<meta name="description" content="刷 X 刷到的好仓库 / 文章 / 项目 / 灵感收藏夹">
+<style>
+/* 10 条铁律落地（注释即验收清单）：
+   1 去边框：全站不用 border，靠 1%-3% 微明度分层；禁 #000。
+     浅色 #f5f5f3 / #fcfcfb；暗色 #0b0b0a / #151515 / #1a1a19 / #20201e。
+   3 暗色补偿：暗色下字重全降 40（400→360，500→460，600→560）。 */
+:root{
+  --bg:#f5f5f3; --surface:#fcfcfb; --surface2:#efefec; --surface3:#e7e7e3;
+  --text:#1c1c1a; --muted:#6d6d68; --accent:#2f5d3a; --accent-bg:#e2ede3;
+  --ring:#2f5d3a; --ring2:rgba(47,93,58,.18);
+  --w:400; --w-med:500; --w-bold:600; --radius:18px;
+  --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.05);
+}
+[data-theme="dark"]{
+  --bg:#0b0b0a; --surface:#151515; --surface2:#1a1a19; --surface3:#20201e;
+  --text:#ececea; --muted:#9a9a94; --accent:#9cc8a4; --accent-bg:#1d2b1f;
+  --ring:#9cc8a4; --ring2:rgba(156,200,164,.22);
+  --w:360; --w-med:460; --w-bold:560;
+}
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Noto Sans SC",system-ui,sans-serif;font-weight:var(--w);line-height:1.65;-webkit-font-smoothing:antialiased}
+/* 5 行内图标：vertical-align:-0.125em；6 数字防抖 tabular-nums；8 防孤字 pretty */
+svg{width:1em;height:1em;vertical-align:-0.125em;fill:currentColor}
+.num{font-variant-numeric:tabular-nums}
+p,h1,h2,h3{text-wrap:pretty}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus{outline:none} /* 2 聚焦不用 outline，改用下面的双环阴影 */
+input:focus{box-shadow:0 0 0 2px var(--ring),0 0 0 5px var(--ring2)} /* 2 双环咬合感 */
+.app{display:grid;grid-template-columns:264px 1fr;min-height:100dvh}
+/* 9 拖拽 / 侧边栏用过阻尼弹簧近似：stiffness 1200 / damping 80，零回弹咬死 */
+.app.collapsed{grid-template-columns:76px 1fr}
+.sidebar{background:var(--surface);padding:20px 14px;display:flex;flex-direction:column;gap:18px;transition:width .55s cubic-bezier(.2,.9,.25,1)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:var(--w-bold);font-size:18px;white-space:nowrap}
+.brand .mark{width:34px;height:34px;flex:none;display:grid;place-items:center;background:var(--surface3);border-radius:11px;font-size:19px}
+.nav{display:grid;gap:4px}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;text-align:left;background:transparent;transition:background .25s}
+.nav button:hover{background:var(--surface2)}
+.nav button.active{background:var(--surface3);font-weight:var(--w-med)}
+.nav .lbl{white-space:nowrap}
+.app.collapsed .lbl,.app.collapsed .side-note,.app.collapsed .brand-name{display:none}
+.side-note{margin-top:auto;background:var(--surface2);border-radius:14px;padding:14px;font-size:13px;color:var(--muted)}
+.side-note b{color:var(--text);font-weight:var(--w-med)}
+.topbar{display:flex;align-items:center;gap:10px;padding:16px 20px 0;flex-wrap:wrap}
+.icon-btn{width:44px;height:44px;flex:none;display:grid;place-items:center;background:var(--surface);border-radius:12px;font-size:20px}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:13px;padding:0 14px}
+.search input{flex:1;min-width:0;height:46px;background:transparent;border:0;color:inherit;font-size:15px}
+.search input::placeholder{color:var(--muted)}
+.theme-btn{height:44px;padding:0 14px;background:var(--surface);border-radius:12px;white-space:nowrap}
+main{padding:20px;max-width:1080px;width:100%;margin:0 auto}
+.hero{background:var(--surface);border-radius:22px;padding:28px 26px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 8px;font-size:clamp(26px,5vw,38px);line-height:1.25;font-weight:var(--w-bold)}
+.hero p{margin:0;color:var(--muted);max-width:62ch}
+/* 4 流式打字：单字 90ms，blur(6px)→清晰，cubic-bezier(.215,.61,.355,1)，相邻字错开 30ms */
+.type span{display:inline-block;opacity:0;animation:typeIn 90ms cubic-bezier(.215,.61,.355,1) forwards}
+@keyframes typeIn{from{opacity:0;filter:blur(6px);transform:translateY(3px)}to{opacity:1;filter:blur(0);transform:none}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.chip{padding:8px 14px;border-radius:999px;background:var(--surface);font-size:14px;transition:background .25s,transform .25s}
+.chip.active{background:var(--accent-bg);color:var(--accent);font-weight:var(--w-med)}
+.stats{color:var(--muted);font-size:14px;margin:4px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:transform .45s cubic-bezier(.2,.9,.25,1),opacity .3s}
+.card.dragging{opacity:.45;transform:scale(.97)}
+.card h3{margin:0;font-size:18px;line-height:1.4;font-weight:var(--w-bold)}
+.card h3 a{text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.meta{font-size:13px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.meta span{display:inline-flex;align-items:center;gap:5px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:12px;background:var(--surface2);padding:3px 9px;border-radius:999px}
+/* 7 丝滑折叠：Grid 0fr→1fr，免 JS 算高 */
+.detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.215,.61,.355,1)}
+.detail.open{grid-template-rows:1fr}
+.detail>div{overflow:hidden}
+.detail ul{margin:0;padding:12px 0 2px 18px;color:var(--muted);font-size:14px;display:grid;gap:6px}
+.row{display:flex;gap:8px;align-items:center;margin-top:auto;padding-top:6px}
+.row .spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:11px;background:var(--surface2);font-size:14px;min-height:44px}
+.btn.primary{background:var(--accent-bg);color:var(--accent)}
+/* 9 点赞 / 对勾用欠阻尼弹簧近似：stiffness 380 / damping 18，微弹 */
+@keyframes pop{0%{transform:scale(1)}35%{transform:scale(1.38)}60%{transform:scale(.92)}80%{transform:scale(1.07)}100%{transform:scale(1)}}
+.pop{animation:pop .55s cubic-bezier(.34,1.56,.64,1)}
+/* 10 复制对勾 2.5s 后自动淡出恢复（JS 计时 + .fade 过渡） */
+.tick{transition:opacity .3s}
+.tick.fade{opacity:0}
+.empty{background:var(--surface);border-radius:var(--radius);padding:32px;text-align:center;color:var(--muted)}
+.foot{color:var(--muted);font-size:13px;text-align:center;padding:28px 16px 40px}
+.scrim{display:none}
+@media(max-width:900px){
+  .app,.app.collapsed{grid-template-columns:1fr}
+  .sidebar{position:fixed;inset:0 auto 0 0;width:272px;z-index:20;transform:translateX(-105%);transition:transform .55s cubic-bezier(.2,.9,.25,1);box-shadow:var(--shadow)}
+  .app.open .sidebar{transform:none}
+  .app.open .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:10}
+  .app.collapsed .lbl,.app.collapsed .side-note,.app.collapsed .brand-name{display:block}
+  main{padding:14px}
+  .hero{padding:22px 18px}
+  .grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="scrim" id="scrim"></div>
+  <aside class="sidebar" aria-label="侧边栏">
+    <div class="brand"><span class="mark">✦</span><span class="brand-name">x-finds</span></div>
+    <nav class="nav" id="nav">
+      <button class="active" data-filter="全部"><span>▦</span><span class="lbl">全部收藏</span></button>
+      <button data-filter="仓库"><span>⌘</span><span class="lbl">仓库</span></button>
+      <button data-filter="文章"><span>✎</span><span class="lbl">文章</span></button>
+      <button data-filter="项目"><span>⬢</span><span class="lbl">项目</span></button>
+      <button data-filter="灵感"><span>✦</span><span class="lbl">灵感</span></button>
+    </nav>
+    <div class="side-note"><b>怎么存？</b><br>刷 X 看到好的，把链接 + 一句“好在哪”发给苏茜，她会追加到 <code>data.json</code> 并推上这个页面。不用你动手改仓库。</div>
+  </aside>
+  <div>
+    <div class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="收起 / 展开侧边栏">☰</button>
+      <label class="search"><span>⌕</span><input id="q" type="search" placeholder="搜标题、标签、备注…" autocomplete="off"></label>
+      <button class="theme-btn" id="themeBtn">◐ 深浅切换</button>
+    </div>
+    <main>
+      <section class="hero">
+        <h1 class="type" id="heroTitle"></h1>
+        <p>刷 X 刷到的好仓库、好文章、好项目、好灵感，都存在这里。手机和电脑都能看，侧边栏可以收起，点卡片看详情，点链接直达原文。</p>
+      </section>
+      <div class="chips" id="chips"></div>
+      <div class="stats"><span class="num" id="count">–</span> 条收藏 · 数据源 <code>data.json</code> · 桌面端拖拽卡片可排序（仅本地顺序）</div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" hidden>没有命中。换个关键词，或者换个分类试试。</div>
+      <div class="foot">x-finds · 以后刷到好的就发给苏茜，她负责存 · 仪表盘按“高定 UI 10 条铁律”制作</div>
+    </main>
+  </div>
+</div>
+<script>
+const FALLBACK = {"items":[]};
+let items = [], filter = "全部", query = "", likes = JSON.parse(localStorage.getItem("x-finds-likes") || "{}"), order = JSON.parse(localStorage.getItem("x-finds-order") || "null");
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* 流式打字：逐字 span，90ms blur→清晰，相邻错开 30ms */
+(function typeHero(){
+  const text = "刷到好的，就存下来。";
+  const h = $("#heroTitle");
+  [...text].forEach((ch, i) => { const s = document.createElement("span"); s.textContent = ch; s.style.animationDelay = (i * 30) + "ms"; h.appendChild(s); });
+})();
+function themeInit(){
+  const saved = localStorage.getItem("x-finds-theme");
+  const dark = saved ? saved === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+}
+$("#themeBtn").onclick = () => {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next); localStorage.setItem("x-finds-theme", next);
+};
+$("#menuBtn").onclick = () => {
+  if (innerWidth <= 900) $("#app").classList.toggle("open"); else $("#app").classList.toggle("collapsed");
+};
+$("#scrim").onclick = () => $("#app").classList.remove("open");
+$("#q").oninput = e => { query = e.target.value.trim().toLowerCase(); render(); };
+$("#nav").onclick = e => {
+  const b = e.target.closest("button[data-filter]"); if (!b) return;
+  filter = b.dataset.filter; document.querySelectorAll("#nav button").forEach(x => x.classList.toggle("active", x === b));
+  document.querySelectorAll(".chip").forEach(x => x.classList.toggle("active", x.dataset.tag === "全部" || false));
+  if (innerWidth <= 900) $("#app").classList.remove("open"); render();
+};
+function visible(){
+  return items.filter(it => (filter === "全部" || it.type === filter)
+    && (!query || (it.title + it.note + it.tags.join(" ") + (it.detail||[]).join(" ")).toLowerCase().includes(query)));
+}
+function renderChips(){
+  const tags = ["全部", ...new Set(items.flatMap(i => i.tags))];
+  $("#chips").innerHTML = tags.map(t => `<button class="chip" data-tag="${esc(t)}">${esc(t)}</button>`).join("");
+  $("#chips").querySelectorAll(".chip").forEach(c => c.onclick = () => {
+    query = c.dataset.tag === "全部" ? "" : c.dataset.tag.toLowerCase(); $("#q").value = c.dataset.tag === "全部" ? "" : c.dataset.tag;
+    document.querySelectorAll(".chip").forEach(x => x.classList.toggle("active", x === c)); render();
+  });
+}
+function cardHTML(it){
+  const liked = !!likes[it.id];
+  return `<article class="card" draggable="true" data-id="${esc(it.id)}">
+    <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
+    <div class="meta"><span>◷ ${esc(it.date)}</span><span>▦ ${esc(it.type)}</span><span>↗ ${esc(it.source)}</span></div>
+    <p>${esc(it.note)}</p>
+    <div class="tags">${it.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+    <div class="detail"><div><ul>${(it.detail||[]).map(d => `<li>${esc(d)}</li>`).join("")}</ul></div></div>
+    <div class="row">
+      <button class="btn" data-act="detail">详情 ▾</button>
+      <a class="btn primary" href="${esc(it.url)}" target="_blank" rel="noopener">打开原文 ↗</a>
+      <span class="spacer"></span>
+      <button class="btn" data-act="copy" aria-label="复制链接"><span class="tick">⧉ 复制</span></button>
+      <button class="btn" data-act="like" aria-label="点赞">${liked ? "♥ 已赞" : "♡ 点赞"}</button>
+    </div>
+  </article>`;
+}
+function render(){
+  const list = visible();
+  $("#count").textContent = list.length;
+  $("#empty").hidden = list.length > 0;
+  $("#grid").innerHTML = list.map(cardHTML).join("");
+  bindCards();
+}
+function bindCards(){
+  document.querySelectorAll(".card").forEach(card => {
+    const id = card.dataset.id, it = items.find(x => x.id === id);
+    card.querySelector('[data-act="detail"]').onclick = e => {
+      const d = card.querySelector(".detail"); d.classList.toggle("open");
+      e.currentTarget.textContent = d.classList.contains("open") ? "收起 ▴" : "详情 ▾";
+    };
+    card.querySelector('[data-act="copy"]').onclick = async e => {
+      try { await navigator.clipboard.writeText(it.url); } catch (_) {
+        const ta = document.createElement("textarea"); ta.value = it.url; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+      }
+      const tick = e.currentTarget.querySelector(".tick"); tick.textContent = "✓ 已复制"; tick.classList.add("pop");
+      setTimeout(() => { tick.classList.add("fade"); setTimeout(() => { tick.textContent = "⧉ 复制"; tick.classList.remove("fade", "pop"); }, 300); }, 2500); /* 10 反馈 2.5s 自熄 */
+    };
+    card.querySelector('[data-act="like"]').onclick = e => {
+      likes[id] = !likes[id]; localStorage.setItem("x-finds-likes", JSON.stringify(likes));
+      e.currentTarget.textContent = likes[id] ? "♥ 已赞" : "♡ 点赞"; e.currentTarget.classList.remove("pop"); void e.currentTarget.offsetWidth; e.currentTarget.classList.add("pop");
+    };
+    card.addEventListener("dragstart", e => { card.classList.add("dragging"); e.dataTransfer.setData("text/plain", id); });
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+    card.addEventListener("dragover", e => e.preventDefault());
+    card.addEventListener("drop", e => {
+      e.preventDefault(); const from = e.dataTransfer.getData("text/plain"); if (!from || from === id) return;
+      const a = items.findIndex(x => x.id === from), b = items.findIndex(x => x.id === id);
+      const [m] = items.splice(a, 1); items.splice(b, 0, m);
+      localStorage.setItem("x-finds-order", JSON.stringify(items.map(x => x.id))); render();
+    });
+  });
+}
+async function load(){
+  themeInit();
+  try { const r = await fetch("data.json"); const j = await r.json(); items = j.items || []; }
+  catch (_) { items = FALLBACK.items; }
+  if (order && order.length) items.sort((a, b) => (order.indexOf(a.id) + 999) - (order.indexOf(b.id) + 999));
+  renderChips(); render();
+}
+load();
+</script>
+</body>
+</html>
