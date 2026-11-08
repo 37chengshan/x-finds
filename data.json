@@ -113,12 +113,307 @@
         "技术栈：Next.js 16 + React 19 + TypeScript、shadcn/ui、Tailwind CSS v4；核心 skill 在 .agents/skills/clone-website/。",
         "作者明确不适用：钓鱼/冒充、冒用他人设计品牌素材、违反服务条款的抓取——用前先确认合规。"
       ]
+    },
+    {
+      "id": "20261105-clawd-400",
+      "title": "Clawd 400 像素动图",
+      "url": "https://github.com/khiqwq/clawd-400",
+      "type": "项目",
+      "tags": [
+        "Clawd",
+        "像素动图",
+        "GIF",
+        "表情包",
+        "CC BY 4.0",
+        "Claude Code"
+      ],
+      "date": "2026-11-05",
+      "source": "用户发来",
+      "note": "400 个 Clawd 像素动图 + 画它们的引擎 + 两个 Claude Code skill。动图透明背景 480×480 GIF，按 CC BY 4.0 署名即可商用；预览站可在线选图打包下载，也能直接拖到桌面保存。",
+      "detail": [
+        "预览站：https://khiqwq.github.io/clawd-400/（按主题筛选、按中英文名或编号搜索；点选择后可勾选 / Shift 连选 / 全选反选，打包 ZIP 下载，ZIP 附 LICENSE 和 manifest；动图可直接拖到桌面、聊天窗口或设计软件，保存的是原始 GIF）。",
+        "宣传片 43 分钟章节：00:00 视频重现（40）、03:50 夏日篇（13）、05:05 情绪（60）、11:00 日常（59）、17:19 编程（60）、25:31 运动（60）、32:03 角色扮演（56）、37:42 节日季节（52），合计正好 400 个；每个动图先在对应主题的网点场景里出场，最后被框起来循环两遍再切下一个，适合当背景、学习陪伴或挑表情包。",
+        "引擎与 skill：Python 引擎画 40×40 网格放大 12 倍；clawd-pixel（画像素动图）与 clawd-halftone（画网点背景）两个 Claude Code skill，可用 /plugin marketplace add khiqwq/clawd-400 安装；另有 AI 可读 API（api/index.json、单图 api/gifs/{nnn}.json、帧字符画 api/frames/{nnn}.txt）。",
+        "许可与归属：动图、背景、封面和文档 CC BY 4.0，署名「Clawd 400 by 风花叶 — CC BY 4.0」；代码 MIT。Clawd 是 Claude Code 吉祥物，本作品为非官方同人，许可证不授予 Anthropic 的商标与形象权利。",
+        "音乐：宣传片音乐为 HoliznaCC0 的 lo-fi 合集（CC0，OpenGameArt）。"
+      ]
+    },
+    {
+      "id": "20261108-gongzhonghao-zhuaqu",
+      "title": "公众号文章抓取 → Obsidian",
+      "url": "https://github.com/AMarvelousJ/gongzhonghao-zhuaqu",
+      "type": "仓库",
+      "tags": [
+        "公众号",
+        "Obsidian",
+        "RAG",
+        "Skill",
+        "MCP",
+        "Windows",
+        "MIT"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "把一个公众号的历史文章批量抓进 Obsidian 做 RAG 语料：每篇一个带 YAML frontmatter 的笔记，图片全本地化，自动生成按日期倒序的索引。作者找了一圈开源项目都不合用，用 Vibe Coding 自己写了一个。",
+      "detail": [
+        "路线：2026 年起微信封了跨号文章列表接口，所以走「微信进程内存扫描 + 公开文章页抓取」，门槛与坑都写在 SKILL.md 里。",
+        "用法：日常一条命令 python scripts/wechat_sync.py --account \"<公众号名>\" 跑完扫描→清洗→diff 新文章→并发抓取→重建索引；也可当 Skill 跟 AI 说「更新一下 XX 的公众号文章」，或走 MCP（5 个工具）。",
+        "实测：单号最多 700+ 篇、上万张图片，附件数与正文引用数一一对应零缺失；546 篇抓取约 7 分钟，3 个号积压 17 天一次补齐用 1 分 36 秒。",
+        "限制：全流程只能在 Windows 跑（内存扫描与清理依赖 Windows API）；增量能抓多少取决于微信内存里还留着多少链接，跑之前要在 PC 微信里打开该号主页滚到底，微信没开就抓不到。",
+        "声明：仅供个人学习与技术备份，公众号内容版权归原作者，不要二次传播或商用，并遵守微信公众平台条款。"
+      ]
+    },
+    {
+      "id": "20261108-creator-buddy",
+      "title": "Creator Buddy：内容创作 Skill 工具箱",
+      "url": "https://github.com/SpaceZephyr/creator-buddy",
+      "type": "项目",
+      "tags": [
+        "创作者",
+        "公众号",
+        "小红书",
+        "视频",
+        "Skill",
+        "MIT"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "一套给内容创作者用的全栈创作 Skill 工具箱：先拉回平台真实内容和数据做情报（搜热点、挖爆款、拆竞品），再一步步做成能发的成品（标题、正文、配图、排版、视频、封面）。作者做公众号三年攒了近三万粉，把最耗心力的写作周边碎事做成了 Skill。",
+      "detail": [
+        "三大板块：公众号 gzh-Skills（定位、长短文、爆款分析、标题、封面、配图、排版）、小红书 xhs-Skills（起号 10 环节：定位、选题、标题、正文、封面、图文、复盘）、视频 video-Skills（选题、脚本、剪辑、B-roll、字幕、配音、封面）。",
+        "作者视频里的工作流：灵感先语音记下来，用数据验证选题，完形填空式写初稿（观点和结构自己定，AI 帮填空），标题先出十几个再挑，最后一键排版、多平台分发；作者说创作的第一步是睡好觉。",
+        "安装：npx skills add SpaceZephyr/creator-buddy，或直接跟你的 agent 说安装这个 skill；支持 Claude Code、Codex、Cursor、OpenClaw、Gemini CLI、OpenCode 等。",
+        "诚实边界（仓库自述）：只读公开数据，不发帖/点赞/评论/关注，不绕登录、验证码、付费墙与风控；热门不等于适合你，爆款不能替代定位判断；AI 出图可能有错别字或瑕疵，交付前需人工检查。",
+        "注意：用户说的「十个 Skill」是作者视频里公众号那块的说法，仓库现在公众号板块列了 11 个，加上小红书和视频总共 30 多个。"
+      ]
+    },
+    {
+      "id": "20261108-looseleaf",
+      "title": "Looseleaf：手绘纸张风 shadcn 组件库",
+      "url": "https://kevintngo.github.io/looseleaf/",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "shadcn",
+        "手绘",
+        "React",
+        "MIT"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "“shadcn/ui, drawn by hand”：纸张纹理、胶带、手绘图表，还有完整页面区块；123 个组件 + 61 个区块，装饰性手绘层与真实交互控件分离，无障碍不受影响。代码、美术与 Kevin Sans 字体均为 MIT。",
+      "detail": [
+        "走 shadcn registry 路线，按需装单个组件或整块页面区块，装进自己仓库后源码归你改。",
+        "种子化 SVG 手绘：同一 seed 在服务端与浏览器画出同一效果；hover/按压/聚焦/禁用各有不同图层。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-plopui",
+      "title": "PlopUI：蓝色马克笔贴纸风 React 组件库",
+      "url": "https://plopui.com",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "手绘",
+        "贴纸",
+        "React",
+        "开源"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "手绘风 React 组件库：蓝色马克笔、贴纸头像，按钮按下去会“挤一下”再弹回；30 个组件，配色均过 WCAG AA，服务端渲染友好。开源，npm i @plop-ui/react。",
+      "detail": [
+        "贴纸外观、严肃内核：按钮就是按钮，键盘、焦点、读屏优先于手绘效果；静态件是 Server Components，抖动来自 seed，前后端一致。",
+        "含宝丽来、票据、笔记本页等纸质组件；和纸胶带标签可撕下飞走。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-inkra",
+      "title": "Inkra：铅笔淡彩手绘风组件库",
+      "url": "https://inkrajs.github.io",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "手绘",
+        "水彩",
+        "中文站"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "铅笔笔触 + 淡彩的手绘风组件库，连日历、地图都带着手绘感；官网为中文站（“像画画一样搭建你的界面”）。官网 2026-11-08 实测可打开；GitHub 仓库与开源协议本轮未核实到，先按“官网可用的灵感收藏”存，协议待补。",
+      "detail": [
+        "官网首页口号：“好界面，也可以有笔迹。”",
+        "本轮只核实了官网可打开与帖子描述一致，未找到对应的 GitHub 仓库页，协议与技术栈未确认，不按开源库引用。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-goopui",
+      "title": "goopUI：会滴落拉伸的黏液组件库",
+      "url": "https://goop.timmcmasters.work/docs/components",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "Vue",
+        "Nuxt",
+        "黏液",
+        "物理动效"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "Vue / Nuxt 优先的黏液组件库：液态物理动效覆盖 shadcn 风格的按钮、表单、菜单、对话框；SVG 黏液层响应指针与组件状态，有 subtle / playful / wild 三档动效预设。GitHub：Tmmcmasters/goopui。",
+      "detail": [
+        "基于 Reka UI 无障碍原语 + Tailwind，Nuxt 模块支持组件自动引入。",
+        "减弱动效模式下显示静态黏液形状，动效关闭。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-solid-glass",
+      "title": "Solid Glass：克制的玻璃质感 Agent 界面",
+      "url": "https://deeplethe.github.io/solid-glass/",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "shadcn",
+        "Agent",
+        "玻璃拟态",
+        "React",
+        "MIT"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "给 shadcn/ui 的克制玻璃材质主题 + 12 个 Agent 专属组件（状态、工具步骤、diff、提问卡等），另有完整 Agent Workspace 整屏区块。GitHub：deeplethe/solid-glass，MIT，2026-10-12 建库，约 229 star。",
+      "detail": [
+        "一张样式表给现有 shadcn 组件换玻璃质感，不用重写组件；另有 Create 页可调厚度、色调、圆角、模糊后导出 CSS 变量。",
+        "Agent 组件：status-glyph、composer、tool-steps、diff-view、ask-card、reasoning、turn-status 等；React 19 + Tailwind 4。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-affectui",
+      "title": "AffectUI：Agent 树与工具调用可视化组件库",
+      "url": "https://affectui.com",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "Agent",
+        "React",
+        "可视化",
+        "部分付费"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "为 AI 产品做的 React 组件库：159 个组件/区块/插画/动效，Agent 树、工具调用、审批、trace 都有；40 项免费开源（MIT），其余属 AffectUI Pro（一次性购买，$249 起）。注意：帖子图里的 Agent Tree 是 Pro，不是免费项。GitHub：flohoeller/affectui。",
+      "detail": [
+        "每项是一个带样式的 .tsx 单文件，无 Tailwind、无动画库依赖，可用 shadcn CLI 安装，也有 MCP 服务器供 coding agent 调用。",
+        "Agent 系列还包括 Agent Fleet、Agent Lanes、Context Map、Run Inspector、Conflict Radar 等，多为 Pro。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-prestige-ui",
+      "title": "Prestige UI：React / Tailwind / Motion 动效组件库",
+      "url": "https://prestigeui.com",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "React",
+        "Tailwind",
+        "Motion",
+        "落地页",
+        "部分付费"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "React + Tailwind + Motion 的动效组件库：140 个区块 + 43 个组件，落地页区块丰富；20 个组件免费，其余区块/模板需一次性购买 All Access（站上写 11 月特价 $99）。GitHub：vora-aryan/Prestige-UI，登记为 MIT（仅 3 star，较新较冷）。",
+      "detail": [
+        "作为 shadcn 之外的第二 registry 接入，组件落到 components/prestigeui；CLI 把 TypeScript + Tailwind 拷进仓库，无运行时包、无构建时 license 检查。",
+        "React 19、Tailwind v4、shadcn CLI；Next.js App Router 为主，也支持 Vite。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-boardui",
+      "title": "BoardUI：仪表盘与 AI 工作台设计系统",
+      "url": "https://boardui.com",
+      "type": "项目",
+      "tags": [
+        "组件库",
+        "仪表盘",
+        "Agent",
+        "React",
+        "Tailwind",
+        "部分付费"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "React + Tailwind v4 的仪表盘与 Agent 界面设计系统：103 个组件，表格、图表、日历、Agent 聊天一应俱全，整体干净克制；免费部分 MIT，Pro 解锁图表卡片、Agent 组件与整页模板（€149/年更新或 €199 终身）。GitHub：BoardUI/boardui。",
+      "detail": [
+        "boardui CLI 或 MCP 把源码拷进项目（无运行时包），另有可装的 Agent Skill（SKILL.md），让 coding agent 每会话都加载 BoardUI 知识。",
+        "Agent 区块：composer、thinking 状态、流式任务列表、上下文/token 计量、plan-mode 问卷等；另有免费 Next.js Chat Starter。",
+        "来自 X @Justin1024go 2026-11-08 转发的 8 个小众组件库清单之 1。"
+      ]
+    },
+    {
+      "id": "20261108-skill-vs-library",
+      "title": "暴论：设计 SKILL 根本没用，用好组件库就够了",
+      "url": "https://x.com/Justin1024go/status/2119282740340101569",
+      "type": "灵感",
+      "tags": [
+        "设计",
+        "组件库",
+        "暴论",
+        "Skill"
+      ],
+      "date": "2026-11-08",
+      "source": "X 刷到",
+      "note": "作者的暴论：设计 SKILL 根本没用，用好组件库就够了。帖子里列了 8 个小众但很有特色的组件库，vibecoding 想做出特色就用这些——本条是帖子本身，下面 8 条是逐个拆开的收藏。",
+      "detail": [
+        "1. Looseleaf：纸张纹理、胶带、手绘图表，还有完整页面区块。",
+        "2. PlopUI：蓝色马克笔、贴纸头像，按钮按下去还会挤一下。",
+        "3. Inkra：铅笔笔触和淡彩，连日历、地图都带着手绘感。",
+        "4. goopUI：会滴落、拉伸的黏液组件，Vue / Nuxt 优先。",
+        "5. Solid Glass：克制的玻璃材质，带 Agent 状态、工具步骤和 diff 展示。",
+        "6. AffectUI：Agent 树、工具调用、审批和 trace；部分付费，图中 Agent Tree 是 Pro。",
+        "7. Prestige UI：React / Tailwind / Motion 动画组件，落地页区块丰富，含付费内容。",
+        "8. BoardUI：主打仪表盘和 AI 工作台，表格、图表、日历到 Agent 聊天都有，整体干净克制，含付费组件。"
+      ]
+    },
+    {
+      "id": "20261108-open-claude-ui",
+      "title": "open-claude-ui：拆开 Claude 桌面端还原的设计系统",
+      "url": "https://github.com/Caho1/open-claude-ui",
+      "type": "仓库",
+      "tags": [
+        "组件库",
+        "Claude",
+        "设计",
+        "逆向",
+        "React",
+        "MIT"
+      ],
+      "date": "2026-11-08",
+      "source": "用户发来",
+      "note": "有人用逆向工具 REA 把 Claude 桌面端拆开，整理成 open-claude-ui：30 个独立 React 组件 + 8 项交互物理算法 + 3000 多行逆向手册，MIT 开源，非 Anthropic 官方。视频顺着它讲 Claude 在质感上下的功夫：四层底色、发丝线、字重、动效五档、开窗占位。",
+      "detail": [
+        "底色：四层底色，浅色模式最深和最白只差 6 个亮度，层次交给亮度差，边框就能省掉；陶土橙用得很省，所以醒目。",
+        "线：发丝线在 2 倍屏 0.5 像素、3 倍屏 1/3、4 倍屏 1/4，永远只占一个发光点；滚动区边缘用 7 个色标平滑淡出。",
+        "字：深色模式整套字重调细一档，400 变 360、500 变 460；不许浏览器自己描粗；会跳的数字用等宽。",
+        "动效：时长只定五档（60、120、200、300、450 毫秒）；查找条按钮按高度算、四边各陷 1 像素；等待的三个点只变亮暗不乱跳；系统开了减少动态效果就全停。",
+        "打开窗口：先上底色不白闪，再照上次侧边栏的样子画出占位，真内容落在原位。",
+        "仓库：https://github.com/Caho1/open-claude-ui，MIT，约 1,600 star（2026-11-02 官网数据）；官网 https://openclaudeui.com，21 章手册、38 个在线演示；REA 上游 morluto/rea。",
+        "注意：非官方项目，Claude 是 Anthropic 商标；仓库为 clean-room 重绘，不含官方字体、图标与音频资产。",
+        "用户原消息为一段视频文案：配音为 AI 合成（Qwen-TTS），画面里的界面为示意重绘，配乐钢琴 CC BY 3.0。"
+      ]
     }
   ],
   "meta": {
     "description": "刷 X 刷到的好仓库 / 文章 / 项目 / 灵感收藏夹",
     "how_to_add": "把链接 + 一句话“好在哪”发给苏茜，她会追加到 data.json 并推送到 GitHub Pages",
     "name": "x-finds",
-    "updated": "2026-11-04"
+    "updated": "2026-11-08"
   }
 }
